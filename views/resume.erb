@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Resume Builder</title>
+    <meta content="Letter" name="pdfkit-page_size" />
+  </head>
+  <body style="<%= @extras && @extras[:font] ? "font-family: #{@extras[:font].gsub('+', ' ')};" : nil %>">
+    <div class="wrapper">
+      <div class="page">
+        <div class="contact-details-block">
+          <h1><%= @resume[:name] %></h1>
+
+          <div class="email"><%= @extras[:email] %></div>
+          <div class="phone"><%= @extras[:phone] %></div>
+
+          <!-- <link href="http://fonts.googleapis.com/css?family=<%= @extras[:font] %>" rel="stylesheet" type="text/css" /> -->
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

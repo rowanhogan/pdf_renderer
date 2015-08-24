@@ -1,49 +1,38 @@
 require 'rubygems'
-require 'sinatra'
-require 'haml'
-require 'linkedin-scraper'
+require 'json'
 require 'pdfkit'
 require 'pry'
-require 'tilt/haml'
+require 'rack/cors'
+require 'sinatra'
+
+use Rack::Cors do |config|
+  config.allow do |allow|
+    allow.origins '*'
+    allow.resource '/*', :headers => :any, :methods => [:get, :post]
+  end
+end
 
 get "/" do
-  haml :index
+  File.read(File.join('public', 'index.html'))
 end
 
-get '/preview/:username' do
-  @username = params[:username]
-  @resume = ::Linkedin::Profile.get_profile("http://www.linkedin.com/in/#{@username}")
-
-  if @resume
-    @preview = true
-    haml :resume
-  else
-    redirect '/'
-  end
-end
-
-post '/render/:username' do
-  @username = params[:username]
-  @resume = ::Linkedin::Profile.get_profile("http://www.linkedin.com/in/#{@username}")
-  @extras = params[:extras]
-
-  if @resume
-    @preview = false
-    response.headers['Content-Type'] = 'application/pdf'
-
-    kit = PDFKit.new(haml(:resume))
-    kit.stylesheets << File.open(settings.public_folder.to_s + '/style.css')
-    kit.stylesheets << File.open(settings.public_folder.to_s + '/fonts.css')
-    kit.to_pdf
-  else
-    redirect '/'
-  end
-end
-
-get '/pdf_test' do
+post '/render/' do
+  html = params[:html].gsub(/\r\n/, '')
   response.headers['Content-Type'] = 'application/pdf'
+  response.headers['Content-Disposition'] = "attachment; filename=resume.pdf"
+  kit = PDFKit.new(html)
+  kit.stylesheets << File.open(settings.public_folder.to_s + '/style.css')
+  kit.stylesheets << File.open(settings.public_folder.to_s + '/fonts.css')
+  kit.to_pdf
+end
 
-  kit = PDFKit.new(haml(:resume))
+post '/resume/render/' do
+  @resume = params[:resume]
+  @extras = params[:extras]
+  response.headers['Content-Type'] = 'application/pdf'
+  response.headers['Content-Disposition'] = "attachment; filename=resume.pdf"
+
+  kit = PDFKit.new(erb(:resume))
   kit.stylesheets << File.open(settings.public_folder.to_s + '/style.css')
   kit.stylesheets << File.open(settings.public_folder.to_s + '/fonts.css')
   kit.to_pdf
