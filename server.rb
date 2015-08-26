@@ -22,8 +22,8 @@ post '/render' do
   response.headers['Content-Disposition'] = "attachment; filename=resume.pdf"
 
   kit = PDFKit.new(html,
-    "margin-bottom" => "0", "margin-left" => "0",
-    "margin-right" => "0", "margin-top" => "0"
+    "margin-top" => "20mm", "margin-bottom" => "20mm",
+    "margin-left" => "0mm", "margin-right" => "0mm"
   )
 
   kit.to_pdf
