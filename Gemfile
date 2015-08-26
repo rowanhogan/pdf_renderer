@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'json'
 gem 'pdfkit'
 gem 'pry'
 gem 'rack-cors'

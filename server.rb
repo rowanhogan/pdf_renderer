@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'json'
 require 'pdfkit'
 require 'pry'
 require 'rack/cors'
@@ -16,24 +15,16 @@ get "/" do
   File.read(File.join('public', 'index.html'))
 end
 
-post '/render/' do
-  html = params[:html].gsub(/\r\n/, '')
-  response.headers['Content-Type'] = 'application/pdf'
-  response.headers['Content-Disposition'] = "attachment; filename=resume.pdf"
-  kit = PDFKit.new(html)
-  kit.stylesheets << File.open(settings.public_folder.to_s + '/style.css')
-  kit.stylesheets << File.open(settings.public_folder.to_s + '/fonts.css')
-  kit.to_pdf
-end
+post '/render' do
+  html = params[:html].gsub(/\r\n/, '') || ""
 
-post '/resume/render/' do
-  @resume = params[:resume]
-  @extras = params[:extras]
   response.headers['Content-Type'] = 'application/pdf'
   response.headers['Content-Disposition'] = "attachment; filename=resume.pdf"
 
-  kit = PDFKit.new(erb(:resume))
-  kit.stylesheets << File.open(settings.public_folder.to_s + '/style.css')
-  kit.stylesheets << File.open(settings.public_folder.to_s + '/fonts.css')
+  kit = PDFKit.new(html,
+    "margin-bottom" => "0", "margin-left" => "0",
+    "margin-right" => "0", "margin-top" => "0"
+  )
+
   kit.to_pdf
 end
