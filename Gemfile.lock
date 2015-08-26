@@ -19,6 +19,7 @@ GEM
     slop (3.6.0)
     tilt (2.0.1)
     wkhtmltopdf-binary-edge (0.12.2.1)
+    wkhtmltopdf-heroku (2.12.2.4)
 
 PLATFORMS
   ruby
@@ -29,6 +30,7 @@ DEPENDENCIES
   rack-cors
   sinatra
   wkhtmltopdf-binary-edge (~> 0.12.2.1)
+  wkhtmltopdf-heroku
 
 BUNDLED WITH
    1.10.6
